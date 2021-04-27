@@ -78,24 +78,28 @@ if __name__ == '__main__':
     with ProcessPoolExecutor(max_workers=POOL_SIZE) as process_pool:
         while(active):
             try:
-                messages = app.queue.receive_messages(MaxNumberOfMessages=available_workers.get_value())
-                for message in messages:
-                    print(message.body)
-                    try:
-                        print("Creating worker")
-                        available_workers.acquire()
-                        fut = process_pool.submit(process_message, message.body)
-                        fut.add_done_callback(on_worker_done)
-                    except:
-                        print("Could not process message in pool.\n", message)
-                        continue
-                    
-                    # Let the queue know that the message is processed
-                    message.delete()
+                if(available_workers.get_value()):
+                    messages = app.queue.receive_messages(MaxNumberOfMessages=available_workers.get_value())
+                    for message in messages:
+                        print(message.body)
+                        try:
+                            print("Creating worker")
+                            available_workers.acquire()
+                            fut = process_pool.submit(process_message, message.body)
+                            fut.add_done_callback(on_worker_done)
+                        except:
+                            print("Could not process message in pool.\n", message)
+                            continue
+                        
+                        # Let the queue know that the message is processed
+                        message.delete()
 
-                if(len(messages) == 0):
-                    sleep(NO_MESSAGES_SLEEP_TIME)
-                    print("No messages. Sleeping...")
+                    if(len(messages) == 0):
+                        sleep(NO_MESSAGES_SLEEP_TIME)
+                        print("No messages. Sleeping...")
+                else:
+                    sleep(WORKERS_BUSY_SLEEP_TIME)
+                    print("All worker busy. Sleeping...")
             except KeyboardInterrupt:
                 active = False
                 break

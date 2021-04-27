@@ -21,6 +21,7 @@ QUEUE_ATTRIBUTES = {
 }
 
 NO_MESSAGES_SLEEP_TIME = 20
+WORKERS_BUSY_SLEEP_TIME = 3
 
 BUCKET_NAME = os.getenv('aws_bucket_name')
 BUCKET_ACL = 'public-read'
