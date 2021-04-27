@@ -26,7 +26,11 @@ def process_message(message_body):
         print_exc()
         return
     try:
-        s3 = boto3.resource('s3')
+        s3 = boto3.resource('s3', 
+            aws_access_key_id=AWS_ACCESS_KEY,
+            aws_secret_access_key= AWS_SECRET_ACCESS_KEY,
+            aws_session_token=AWS_SESSION_TOKEN,
+            region_name=AWS_DEFAULT_REGION)
         bucket = s3.Bucket(BUCKET_NAME)
     except:
         print("Worker failed to obtain bucket")
