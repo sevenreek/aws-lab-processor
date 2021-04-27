@@ -32,7 +32,7 @@ class AWSApplication():
             self.queue = self.sqs.get_queue_by_name(QueueName=QUEUE_NAME)
         except:
         # Create the queue. This returns an SQS.Queue instance
-			print_exc()
+            print_exc()
             print("Queue does not exist")
             exit(1)
 
