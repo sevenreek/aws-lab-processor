@@ -15,6 +15,7 @@ def process_message(message_body):
     processing_methods = {
         Thumbnailer.NAME : Thumbnailer(),
         ImageInverter.NAME : ImageInverter(),
+        Grayscaler().NAME : Grayscaler(),
     }
     try:
         rq = json.loads(message_body)
