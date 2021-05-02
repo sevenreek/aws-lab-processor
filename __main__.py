@@ -55,7 +55,8 @@ def process_message(message_body):
         return
     try:
         print(f"Uploading {os.path.join(SCRIPT_ROOT_DIRECTORY, destination)}->{destination}")
-        bucket.upload_file(os.path.join(SCRIPT_ROOT_DIRECTORY, destination), destination, ExtraArgs={'ACL':'public-read'})
+        if(method != Thumbnailer.NAME):
+            bucket.upload_file(os.path.join(SCRIPT_ROOT_DIRECTORY, destination), destination, ExtraArgs={'ACL':'public-read'})
         bucket.upload_file(thumb_filename, THUMBS_DIR+'/'+destination, ExtraArgs={'ACL':'public-read'})
 
     except:
